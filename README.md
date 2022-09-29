@@ -10,6 +10,7 @@ start adding usefull new features and hopefully `operato` is one of them.
 # So what is `operato`?
 `operato` is a set of tools and utilities that support the use of OpenRadioss.
 I currently have two tools in mind:
- - A Python package to facilitate the programmatic generation of meshes
+ - A Python package to facilitate the programmatic generation of input models
+   (in particular meshes)
  - A conversion tool for the conversion of OpenRadioss `.h3d` files to any of
    the VTK file formats
