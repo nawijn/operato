@@ -6,9 +6,9 @@ from ..common import FloatField, IntField, Keyword, StringField
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
-# /DEFAULT/INTER/TYPE7        /DEFAULT/INTER/TYPE11       /DEFAULT/INTER/TYPE19       
-# /DEFAULT/INTER/TYPE24       /DEFAULT/INTER/TYPE25       /DFS/DETCORD                
-# /DFS/DETLINE                /DFS/DETLINE/NODE           /DFS/DETPLAN                
+# /DEFAULT/INTER/TYPE7        /DEFAULT/INTER/TYPE11       /DEFAULT/INTER/TYPE19
+# /DEFAULT/INTER/TYPE24       /DEFAULT/INTER/TYPE25       /DFS/DETCORD
+# /DFS/DETLINE                /DFS/DETLINE/NODE           /DFS/DETPLAN
 #
 
 # --- /DEFAULT/INTER/TYPE7 ------------------------------------------------------
@@ -30,11 +30,9 @@ class DefaultInterType7(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DEFAULT/INTER/TYPE11 ------------------------------------------------------
@@ -56,11 +54,9 @@ class DefaultInterType11(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DEFAULT/INTER/TYPE19 ------------------------------------------------------
@@ -82,11 +78,9 @@ class DefaultInterType19(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DEFAULT/INTER/TYPE24 ------------------------------------------------------
@@ -108,11 +102,9 @@ class DefaultInterType24(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DEFAULT/INTER/TYPE25 ------------------------------------------------------
@@ -134,11 +126,9 @@ class DefaultInterType25(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DFS/DETCORD ------------------------------------------------------
@@ -160,11 +150,9 @@ class DfsDetcord(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DFS/DETLINE ------------------------------------------------------
@@ -186,11 +174,9 @@ class DfsDetline(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DFS/DETLINE/NODE ------------------------------------------------------
@@ -212,11 +198,9 @@ class DfsDetlineNode(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DFS/DETPLAN ------------------------------------------------------
@@ -238,8 +222,6 @@ class DfsDetplan(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure

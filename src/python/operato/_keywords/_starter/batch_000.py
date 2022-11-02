@@ -4,11 +4,12 @@ from dataclasses import dataclass
 from typing import List, Literal
 
 from ..common import (
-    ArrayOfFields,
+    ArrayOfAtomicFields,
     BoolField,
     FloatField,
     IntField,
     Keyword,
+    KeywordStructureType,
     KeywordPreconditionsType,
     StringField,
 )
@@ -45,7 +46,7 @@ class Accel(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             StringField("accel_title", 1, 10),
             [IntField("node_id", 1), IntField("skew_id", 2), FloatField("f_cut", 4)],
         ]
@@ -101,7 +102,7 @@ class Activ(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             StringField("activ_title", 1, 10),
             [
                 IntField("sens_id", 1),
@@ -117,7 +118,7 @@ class Activ(Keyword):
         ]
 
         if self.i_form == 2:
-            structure.extend([[FloatField("t_start", 1), FloatField("t_stop", 3)]])
+            structure.append([FloatField("t_start", 1), FloatField("t_stop", 3)])
 
         return structure
 
@@ -168,46 +169,40 @@ class Admas(Keyword):
 
     @property
     def structure(self):
-        structure = []
-
-        structure.extend([StringField("admas_title", 1, 10)])
+        structure: KeywordStructureType = [StringField("admas_title", 1, 10)]
 
         if self.type in (0, 1):
-            structure.extend([[FloatField("mass", 1), IntField("grnd_id", 3)]])
+            structure.append([FloatField("mass", 1), IntField("grnd_id", 3)])
 
         elif self.type == 2:
-            structure.extend(
-                [[FloatField("mass_per_unit_area", 1), IntField("surf_id", 3)]]
+            structure.append(
+                [FloatField("mass_per_unit_area", 1), IntField("surf_id", 3)]
             )
 
         elif self.type in (3, 4):
-            structure.extend(
+            structure.append(
                 [
-                    [
-                        FloatField("mass", 1),
-                        IntField("grpart_id", 3),
-                        IntField("iflag", 4),
-                    ]
+                    FloatField("mass", 1),
+                    IntField("grpart_id", 3),
+                    IntField("iflag", 4),
                 ]
             )
 
         elif self.type == 5:
 
-            structure.extend(
-                [ArrayOfFields([FloatField("mass", 1), IntField("node_id", 3)])]
+            structure.append(
+                ArrayOfAtomicFields([FloatField("mass", 1), IntField("node_id", 3)])
             )
 
         elif self.type in (6, 7):
-            structure.extend(
-                [
-                    ArrayOfFields(
-                        [
-                            FloatField("mass", 1),
-                            IntField("part_id", 3),
-                            IntField("iflag", 4),
-                        ]
-                    )
-                ]
+            structure.append(
+                ArrayOfAtomicFields(
+                    [
+                        FloatField("mass", 1),
+                        IntField("part_id", 3),
+                        IntField("iflag", 4),
+                    ]
+                )
             )
 
         return structure
@@ -233,7 +228,7 @@ class AdmeshGlobal(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             [
                 IntField("levelmax", 1),
                 IntField("ladmrule", 2),
@@ -271,7 +266,7 @@ class AdmeshSet(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             StringField("adset_title", 1, 10),
             [
                 FloatField("angle_criterion", 1),
@@ -307,7 +302,7 @@ class AdmeshStateShell(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             [
                 IntField("shell_id", 1),
                 IntField("shell_id1", 2),
@@ -346,7 +341,7 @@ class AdmeshStateSh3n(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             [
                 IntField("sh3n_id", 1),
                 IntField("sh3n_id1", 2),
@@ -384,7 +379,7 @@ class ALEBcs(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             StringField("bcs_title", 1, 10),
             [
                 BoolField("grilag", 1, 6, [4, 5, 6, 8, 9, 10]),
@@ -420,6 +415,8 @@ class ALEClose(Keyword):
 
     @property
     def structure(self):
-        structure = [[FloatField("htest", 1), FloatField("hclose", 3)]]
+        structure: KeywordStructureType = [
+            [FloatField("htest", 1), FloatField("hclose", 3)]
+        ]
 
         return structure

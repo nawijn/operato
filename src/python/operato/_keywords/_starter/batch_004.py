@@ -7,6 +7,7 @@ from ..common import (
     FloatField,
     IntField,
     Keyword,
+    KeywordPreconditionsType,
     StringField,
     KeywordStructureType,
     get_literal_values,
@@ -22,23 +23,95 @@ from ..common import (
 # --- /CLUSTER ------------------------------------------------------
 @dataclass
 class Cluster(Keyword):
-    attr1: int
-    attr2: float
+    """Describes an assembly of brick or spring elements for post-processing
+    and failure control.
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/CLUSTER` is not implemented.")
+    """
+
+    cluster_id: int
+    cluster_title: str
+    group_id: int
+    skew_id: int
+    i_fail: Literal[0, 1, 2, 3] = 0
+    fn_fail: float = 1e30
+    fs_fail: float = 1e30
+    mt_fail: float = 1e30
+    mb_fail: float = 1e30
+    a1: float = 1.0
+    a2: float = 1.0
+    a3: float = 1.0
+    a4: float = 1.0
+    b1: float = 1.0
+    b2: float = 1.0
+    b3: float = 1.0
+    b4: float = 1.0
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/CLUSTER"
+        if self.unit_id:
+            return f"/CLUSTER/{self.cluster_id}/{self.unit_id}"
+        else:
+            return f"/CLUSTER/{self.cluster_id}"
 
     @property
     def pre_conditions(self):
-        return []
+        conditions: KeywordPreconditionsType = []
+
+        conditions.append(
+            (
+                self.i_fail in get_literal_values(self, "i_fail"),
+                "Invalid value for `i_fail`. See documentation for details.",
+            )
+        )
+
+        return conditions
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = [
+            StringField("cluster_title", 1, 10),
+            [
+                IntField("group_id", 1),
+                IntField("skew_id", 2),
+                IntField("i_fail", 3),
+            ],
+        ]
+
+        if self.i_fail != 3:
+            structure.extend(
+                [
+                    FloatField("fn_fail", 1),
+                    FloatField("fs_fail", 1),
+                    FloatField("mt_fail", 1),
+                    FloatField("mb_fail", 1),
+                ]
+            )
+        else:
+            structure.extend(
+                [
+                    [
+                        FloatField("fn_fail", 1),
+                        FloatField("a1", 3),
+                        FloatField("b1", 5),
+                    ],
+                    [
+                        FloatField("fs_fail", 1),
+                        FloatField("a2", 3),
+                        FloatField("b2", 5),
+                    ],
+                    [
+                        FloatField("mt_fail", 1),
+                        FloatField("a3", 3),
+                        FloatField("b3", 5),
+                    ],
+                    [
+                        FloatField("mb_fail", 1),
+                        FloatField("a4", 3),
+                        FloatField("b4", 5),
+                    ],
+                ]
+            )
 
         return structure
 
@@ -46,15 +119,22 @@ class Cluster(Keyword):
 # --- /CNODE ------------------------------------------------------
 @dataclass
 class Cnode(Keyword):
-    attr1: int
-    attr2: float
+    """Defines the coordinate of common node, which could be merged to the
+    nearest selected NODE or CNODE."""
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/CNODE` is not implemented.")
+    search_value: float
+    cnode_id: int
+    x_c: float
+    y_c: float
+    z_c: float
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/CNODE"
+        if self.unit_id:
+            return f"/CNODE/{self.search_value}/self.unit_id"
+        else:
+            return f"/CNODE/{self.search_value}"
 
     @property
     def pre_conditions(self):
@@ -62,7 +142,14 @@ class Cnode(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure = [
+            [
+                IntField("cnode_id", 1),
+                FloatField("x_c", 2),
+                FloatField("y_c", 4),
+                FloatField("z_c", 6),
+            ]
+        ]
 
         return structure
 
@@ -70,15 +157,26 @@ class Cnode(Keyword):
 # --- /CONVEC ------------------------------------------------------
 @dataclass
 class Convec(Keyword):
-    attr1: int
-    attr2: float
+    """Describes the free or forced convective flux."""
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/CONVEC` is not implemented.")
+    convec_id: int
+    convec_flux_title: str
+    surf_id_t: int
+    fct_id_t: int
+    sens_id: int
+    t_start: float
+    H: float
+    ascale_x: float = 1.0
+    fscale_y: float = 1.0
+    t_stop: float = 1e30
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/CONVEC"
+        if self.unit_id:
+            return f"/CONVEC/{self.convec_id}/{self.unit_id}"
+        else:
+            return f"/CONVEC/{self.convec_id}"
 
     @property
     def pre_conditions(self):
@@ -86,7 +184,21 @@ class Convec(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure = [
+            StringField("convec_flux_title", 1, 10),
+            [
+                IntField("surf_id_t", 1),
+                IntField("fct_id_t", 2),
+                IntField("sens_id", 3),
+            ],
+            [
+                FloatField("ascale_x", 1),
+                FloatField("fscale_y", 3),
+                FloatField("t_start", 5),
+                FloatField("t_stop", 7),
+                FloatField("H", 9),
+            ],
+        ]
 
         return structure
 
@@ -94,15 +206,19 @@ class Convec(Keyword):
 # --- /CYL_JOINT ------------------------------------------------------
 @dataclass
 class CylJoint(Keyword):
-    attr1: int
-    attr2: float
-
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/CYL_JOINT` is not implemented.")
+    joint_id: int
+    joint_title: str
+    node_id_1: int
+    node_id_2: int
+    grnd_id: int
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/CYL_JOINT"
+        if self.unit_id:
+            return f"/CYL_JOINT/{self.joint_id}/{self.unit_id}"
+        else:
+            return f"/CYL_JOINT/{self.joint_id}"
 
     @property
     def pre_conditions(self):
@@ -110,7 +226,14 @@ class CylJoint(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure = [
+            StringField("joint_title", 1, 10),
+            [
+                IntField("node_id_1", 1),
+                IntField("node_id_2", 2),
+                IntField("grnd_id", 3),
+            ],
+        ]
 
         return structure
 
@@ -209,23 +332,98 @@ class Damp(Keyword):
 # --- /DAMP/INTER ------------------------------------------------------
 @dataclass
 class DampInter(Keyword):
-    attr1: int
-    attr2: float
+    """The card is intended to apply Rayleigh damping to the nodes inside of
+    specified contact to increase its stability and reduce results scattering
+    due to small variations of initial or boundary conditions."""
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/DAMP/INTER` is not implemented.")
+    damp_id: int
+    damp_title: str
+    grnd_id: int
+    skew_id: int
+    t_start: float
+    nb_time_step: int = 20
+    t_stop: float = 1.0e30
+    a: float | None = None
+    b: float | None = None
+    ax: float | None = None
+    ay: float | None = None
+    az: float | None = None
+    axx: float | None = None
+    ayy: float | None = None
+    azz: float | None = None
+    bx: float | None = None
+    by: float | None = None
+    bz: float | None = None
+    bxx: float | None = None
+    byy: float | None = None
+    bzz: float | None = None
 
     @property
     def keyword(self):
-        return "/DAMP/INTER"
+        return f"/DAMP/INTER/{self.damp_id}"
 
     @property
     def pre_conditions(self):
+        # TODO: check consistency for short/long format definitions
         return []
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = [
+            StringField("damp_title", 1, 10),
+            IntField("nb_time_step", 1),
+        ]
+
+        # Note: it is tempting to use `all((self.a, self.b))`, but this will
+        # fail if `a` or `b` equals 0 (or 0.0). We specifically want to test
+        # for `None`.
+        if None not in (self.a, self.b):
+            structure.extend(
+                [
+                    [
+                        FloatField("a", 1),
+                        FloatField("b", 3),
+                        IntField("grnd_id", 5),
+                        IntField("skew_id", 6),
+                        FloatField("t_start", 7),
+                        FloatField("t_stop", 9),
+                    ]
+                ]
+            )
+
+        else:
+            structure.extend(
+                [
+                    [
+                        FloatField("ax", 1),
+                        FloatField("bx", 3),
+                        IntField("grnd_id", 5),
+                        IntField("skew_id", 6),
+                        FloatField("t_start", 7),
+                        FloatField("t_stop", 9),
+                    ],
+                    [
+                        FloatField("ay", 1),
+                        FloatField("by", 3),
+                    ],
+                    [
+                        FloatField("az", 1),
+                        FloatField("bz", 3),
+                    ],
+                    [
+                        FloatField("axx", 1),
+                        FloatField("bxx", 3),
+                    ],
+                    [
+                        FloatField("ayy", 1),
+                        FloatField("byy", 3),
+                    ],
+                    [
+                        FloatField("azz", 1),
+                        FloatField("bzz", 3),
+                    ],
+                ]
+            )
 
         return structure
 

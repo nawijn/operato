@@ -5,7 +5,7 @@ from typing import Literal, List
 from numpy.typing import NDArray
 
 from ..common import (
-    ArrayOfFields,
+    ArrayOfAtomicFields,
     BoolField,
     FloatField,
     IntField,
@@ -292,7 +292,7 @@ class Beam(Keyword):
     @property
     def structure(self):
         structure = [
-            ArrayOfFields(
+            ArrayOfAtomicFields(
                 [
                     IntField("beam_ids", 1),
                     IntField("node_ids:0", 2),

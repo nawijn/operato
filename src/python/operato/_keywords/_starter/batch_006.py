@@ -6,23 +6,29 @@ from ..common import FloatField, IntField, Keyword, StringField
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
-# /DFS/DETPLAN/NODE           /DFS/DETPOINT               /DFS/DETPOINT/NODE          
-# /DFS/LASER                  /DFS/WAV_SHA                /DRAPE                      
-# /EBCS/FLUXOUT               /EBCS/GRADP0                /EBCS/INIP                  
+# /DFS/DETPLAN/NODE           /DFS/DETPOINT               /DFS/DETPOINT/NODE
+# /DFS/LASER                  /DFS/WAV_SHA                /DRAPE
+# /EBCS/FLUXOUT               /EBCS/GRADP0                /EBCS/INIP
 #
 
 # --- /DFS/DETPLAN/NODE ------------------------------------------------------
 @dataclass
 class DfsDetplanNode(Keyword):
-    attr1: int
-    attr2: float
+    """Describes a planar detonation wave."""
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/DFS/DETPLAN/NODE` is not implemented.")
+    detp_id: int
+    p_id: int
+    n_id: int
+    t_det: float = 0.0
+    mat_id: int = 0
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/DFS/DETPLAN/NODE"
+        if self.unit_id:
+            return f"/DFS/DETPLAN/NODE/{self.detp_id}/{self.unit_id}"
+        else:
+            return f"/DFS/DETPLAN/NODE/{self.detp_id}"
 
     @property
     def pre_conditions(self):
@@ -31,24 +37,34 @@ class DfsDetplanNode(Keyword):
     @property
     def structure(self):
         structure = [
-
+            [FloatField("t_det", 7), IntField("mat_id", 9), IntField("p_id", 10)],
+            IntField("n_id", 10),
         ]
 
-        return structure 
+        return structure
 
 
 # --- /DFS/DETPOINT ------------------------------------------------------
 @dataclass
 class DfsDetpoint(Keyword):
-    attr1: int
-    attr2: float
+    """Locates the detonation point and set lighting time for an explosive
+    material law."""
 
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/DFS/DETPOINT` is not implemented.")
+    detpoint_id: int
+    x_det: float = 0.0
+    y_det: float = 0.0
+    z_det: float = 0.0
+    t_det: float = 0.0
+    mat_id: float = 0
+
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/DFS/DETPOINT"
+        if self.unit_id:
+            return f"/DFS/DETPOINT/{self.detpoint_id}/{self.unit_id}"
+        else:
+            return f"/DFS/DETPOINT/{self.detpoint_id}"
 
     @property
     def pre_conditions(self):
@@ -57,24 +73,33 @@ class DfsDetpoint(Keyword):
     @property
     def structure(self):
         structure = [
-
+            [
+                FloatField("x_det", 1),
+                FloatField("y_det", 3),
+                FloatField("z_det", 5),
+                FloatField("t_det", 7),
+                IntField("mat_id", 9),
+            ]
         ]
 
-        return structure 
+        return structure
 
 
 # --- /DFS/DETPOINT/NODE ------------------------------------------------------
 @dataclass
 class DfsDetpointNode(Keyword):
-    attr1: int
-    attr2: float
-
-    def __post_init__(self):
-        raise NotImplementedError("Keyword `/DFS/DETPOINT/NODE` is not implemented.")
+    detpoint_id: int
+    t_det: float
+    node_id: int
+    mat_id: int = 0
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return "/DFS/DETPOINT/NODE"
+        if self.unit_id:
+            return f"/DFS/DETPOINT/NODE/{self.detpoint_id}/{self.unit_id}"
+        else:
+            return f"/DFS/DETPOINT/NODE/{self.detpoint_id}"
 
     @property
     def pre_conditions(self):
@@ -83,10 +108,14 @@ class DfsDetpointNode(Keyword):
     @property
     def structure(self):
         structure = [
-
+            [
+                FloatField("t_det", 7),
+                IntField("mat_id", 9),
+                IntField("node_id", 10),
+            ]
         ]
 
-        return structure 
+        return structure
 
 
 # --- /DFS/LASER ------------------------------------------------------
@@ -108,11 +137,9 @@ class DfsLaser(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DFS/WAV_SHA ------------------------------------------------------
@@ -134,11 +161,9 @@ class DfsWavSha(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /DRAPE ------------------------------------------------------
@@ -160,11 +185,9 @@ class Drape(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /EBCS/FLUXOUT ------------------------------------------------------
@@ -186,11 +209,9 @@ class EbcsFluxout(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /EBCS/GRADP0 ------------------------------------------------------
@@ -212,11 +233,9 @@ class EbcsGradp0(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /EBCS/INIP ------------------------------------------------------
@@ -238,8 +257,6 @@ class EbcsInip(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure

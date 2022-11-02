@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+
+from operato.keywords import KEYWORD_REGISTRY
+import sys
+
+if len(sys.argv) != 2:
+    print("*** Usage: make_definition KEYWORD")
+    exit()
+
+
+def get_attrs(keyword):
+    cls = KEYWORD_REGISTRY["engine"][keyword]
+
+    return list(cls.__dict__["__dataclass_fields__"].keys())
+
+
+keyword = sys.argv[1].upper()
+
+attrs = get_attrs(keyword)
+
+lines = []
+lines.append("[default]")
+lines.append('value = """\\')
+lines.append("")
+lines.append('"""')
+lines.append("[default.params]")
+for attr in attrs:
+    lines.append(f"{attr} = ")
+
+content = "\n".join(lines)
+
+print(content)
+
+with open(f"test_{keyword.lower()}.toml", "w") as fd:
+    fd.write(content)

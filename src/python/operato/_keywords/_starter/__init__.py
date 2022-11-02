@@ -40,7 +40,7 @@ from .batch_003 import (
     Begin,
     BemDaa,
     BemFlow,
-    Box,
+    #   Box Note: /BOX does not exist.
     BoxBox,
     Brick,
     Bric20,
@@ -742,7 +742,6 @@ keywords = (
     Begin,
     BemDaa,
     BemFlow,
-    Box,
     BoxBox,
     Bric20,
     Brick,

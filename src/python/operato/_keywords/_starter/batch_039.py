@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
-from ..common import ArrayOfFields, FloatField, IntField, Keyword
+from ..common import ArrayOfAtomicFields, FloatField, IntField, Keyword
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
@@ -195,7 +195,7 @@ class Node(Keyword):
     @property
     def structure(self):
         structure = [
-            ArrayOfFields(
+            ArrayOfAtomicFields(
                 (
                     IntField("node_ids", 1),
                     FloatField("xc_yc_zc:0", 2),

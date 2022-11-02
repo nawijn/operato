@@ -6,9 +6,9 @@ from ..common import FloatField, IntField, Keyword, StringField
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
-# /TH/ACCEL                   /TH/BEAM                    /TH/BRIC                    
-# /TH/CLUSTER                 /TH/CYL_JO                  /TH/FRAME                   
-# /TH/FXBODY                  /TH/GAUGE                   /TH/INTER                   
+# /TH/ACCEL                   /TH/BEAM                    /TH/BRIC
+# /TH/CLUSTER                 /TH/CYL_JO                  /TH/FRAME
+# /TH/FXBODY                  /TH/GAUGE                   /TH/INTER
 #
 
 # --- /TH/ACCEL ------------------------------------------------------
@@ -30,11 +30,9 @@ class ThAccel(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/BEAM ------------------------------------------------------
@@ -56,11 +54,9 @@ class ThBeam(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/BRIC ------------------------------------------------------
@@ -82,11 +78,9 @@ class ThBric(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/CLUSTER ------------------------------------------------------
@@ -108,11 +102,9 @@ class ThCluster(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/CYL_JO ------------------------------------------------------
@@ -134,11 +126,9 @@ class ThCylJo(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/FRAME ------------------------------------------------------
@@ -160,11 +150,9 @@ class ThFrame(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/FXBODY ------------------------------------------------------
@@ -186,11 +174,9 @@ class ThFxbody(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/GAUGE ------------------------------------------------------
@@ -212,11 +198,9 @@ class ThGauge(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure
 
 
 # --- /TH/INTER ------------------------------------------------------
@@ -238,8 +222,6 @@ class ThInter(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure = []
 
-        ]
-
-        return structure 
+        return structure

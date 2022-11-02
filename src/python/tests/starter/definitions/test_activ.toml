@@ -13,7 +13,7 @@ grquad_id = 33
 grshel_id = 34
 grtrus_id = 35
 grbeam_id = 36
-grspr_id =  37
+grspr_id = 37
 grsh3n_id = 38
 i_form = 1
 [with_iform_2]
@@ -32,7 +32,7 @@ grquad_id = 33
 grshel_id = 34
 grtrus_id = 35
 grbeam_id = 36
-grspr_id =  37
+grspr_id = 37
 grsh3n_id = 38
 i_form = 2
 t_start = 41
