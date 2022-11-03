@@ -475,14 +475,14 @@ class Brick(Keyword):
             ArrayOfAtomicFields(
                 [
                     IntField("brick_ids", 1),
-                    IntField("node_ids:0", 2),
-                    IntField("node_ids:1", 3),
-                    IntField("node_ids:2", 4),
-                    IntField("node_ids:3", 5),
-                    IntField("node_ids:4", 6),
-                    IntField("node_ids:5", 7),
-                    IntField("node_ids:6", 8),
-                    IntField("node_ids:7", 9),
+                    IntField("node_ids:ID_1|0", 2),
+                    IntField("node_ids:ID_2|1", 3),
+                    IntField("node_ids:ID_3|2", 4),
+                    IntField("node_ids:ID_4|3", 5),
+                    IntField("node_ids:ID_5|4", 6),
+                    IntField("node_ids:ID_6|5", 7),
+                    IntField("node_ids:ID_7|6", 8),
+                    IntField("node_ids:ID_8|7", 9),
                 ]
             )
         ]
@@ -532,34 +532,34 @@ class Bric20(Keyword):
                     ArrayOfAtomicFields(
                         [
                             IntField("brick_ids", 1),
-                            IntField("node_ids:0", 2),
-                            IntField("node_ids:1", 3),
-                            IntField("node_ids:2", 4),
-                            IntField("node_ids:3", 5),
-                            IntField("node_ids:4", 6),
-                            IntField("node_ids:5", 7),
-                            IntField("node_ids:6", 8),
-                            IntField("node_ids:7", 9),
+                            IntField("node_ids:ID_1|0", 2),
+                            IntField("node_ids:ID_2|1", 3),
+                            IntField("node_ids:ID_3|2", 4),
+                            IntField("node_ids:ID_4|3", 5),
+                            IntField("node_ids:ID_5|4", 6),
+                            IntField("node_ids:ID_6|5", 7),
+                            IntField("node_ids:ID_7|6", 8),
+                            IntField("node_ids:ID_8|7", 9),
                         ]
                     ),
                     ArrayOfAtomicFields(
                         [
-                            IntField("node_ids:8", 1),
-                            IntField("node_ids:9", 2),
-                            IntField("node_ids:10", 3),
-                            IntField("node_ids:11", 4),
-                            IntField("node_ids:12", 5),
-                            IntField("node_ids:13", 6),
-                            IntField("node_ids:14", 7),
-                            IntField("node_ids:15", 8),
+                            IntField("node_ids:ID_9|8", 1),
+                            IntField("node_ids:ID_10|9", 2),
+                            IntField("node_ids:ID_11|10", 3),
+                            IntField("node_ids:ID_12|11", 4),
+                            IntField("node_ids:ID_13|12", 5),
+                            IntField("node_ids:ID_14|13", 6),
+                            IntField("node_ids:ID_15|14", 7),
+                            IntField("node_ids:ID_16|15", 8),
                         ]
                     ),
                     ArrayOfAtomicFields(
                         [
-                            IntField("node_ids:16", 1),
-                            IntField("node_ids:17", 2),
-                            IntField("node_ids:18", 3),
-                            IntField("node_ids:19", 4),
+                            IntField("node_ids:ID_17|16", 1),
+                            IntField("node_ids:ID_18|17", 2),
+                            IntField("node_ids:ID_19|18", 3),
+                            IntField("node_ids:ID_20|19", 4),
                         ]
                     ),
                 ]

@@ -150,6 +150,7 @@ class Admas(Keyword):
 
     @property
     def pre_conditions(self):
+        print(self.type)
         conditions: KeywordPreconditionsType = [
             (
                 self.type in {0, 1, 2, 3, 4, 5, 6, 7},

@@ -1,10 +1,11 @@
 from abc import abstractproperty
+from collections import namedtuple
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
 from io import TextIOBase
-from typing import List, Literal, Sequence, Tuple, get_args, get_type_hints
 from math import floor
+from typing import List, Literal, Sequence, Tuple, get_args, get_type_hints
 
 from operato.constants import (
     FIELDWIDTH,
@@ -12,6 +13,11 @@ from operato.constants import (
     INT_FULL_FORMAT_SPEC,
     NFIELDS,
 )
+
+
+# Collects column indexing information for fields that reference array like
+# objects
+ArrayInfo = namedtuple("ArrayInfo", ("attr", "column_index", "index_style"))
 
 
 def get_literal_values(obj, attr):
@@ -35,14 +41,14 @@ def check_if_all_values_are_present(
         return (False, srep)
 
 
-class KeywordType(Enum):
-    """Helper enumeration in case we need to distinguish between whether or not a particular
-    keyword is an engine, starter or generic keyword. Generic in this case means the keyword
-    does not need special treatment.
+class KeywordCategory(Enum):
+    """Helper enumeration in case we need to distinguish between whether or not
+    a particular keyword is an engine, starter or generic keyword. Generic in
+    this case means the keyword does not need special treatment.
 
-    The reason why this enumaration is added is to gracefully handle the case where an
-    engine keyword uses more than 5 float fields on a single line (e.g. `/ALE/DISP/DONEA`).
-    """
+    The reason why this enumaration is added is to gracefully handle the case
+    where an engine keyword uses more than 5 float fields on a single line
+    (e.g. `/ALE/DISP/DONEA`)."""
 
     ENGINE = 1
     STARTER = 2
@@ -52,14 +58,19 @@ class KeywordType(Enum):
 class LineDefinitionType(Enum):
     # Example: `StringField(..)`
     SINGLE_ATOMIC_FIELD = 1
-    # Example: `[IntFieldi(..), FloatField(..), FloatField(..)]`
+
+    # Example: `[IntField(..), FloatField(..), FloatField(..)]`
     SEQUENCE_OF_ATOMIC_FIELDS = 2
+
     # Example: `VLSequenceOfAtomicField(IntField(..))`
     VL_SEQUENCE_OF_ATOMIC_FIELD = 3
-    # Example: `ArrayOfAtomicFields([IntField(..), FloatField(..), FloatField(..)])`
+
+    # Example: `ArrayOfAtomicFields([IntField(..), FloatField(..),
+    # FloatField(..)])`
     ARRAY_OF_ATOMIC_FIELDS = 4
-    # Example: `MultiLineArrayOfAttomicFields(
-    #                [ArrayOfAtomicFields(..), ArrayOfAtomicFields(..)])`
+
+    # Example: `MultiLineArrayOfAttomicFields( [ArrayOfAtomicFields(..),
+    # ArrayOfAtomicFields(..)])`
     MULTI_LINE_ARRAY_OF_ATOMIC_FIELDS = 5
 
 
@@ -72,31 +83,21 @@ class TextAlignment(Enum):
 
 
 class IndexStyle(Enum):
-    """Represents indexing style for array like parameters. The two options are
-    `BY_COLUMN_INDEX` (e.g. `nodes[row_index][col_index]`)  or
-    `BY_NAME` (e.g nodes["xc"][row_index].."""
+    """Identifies the column indexing style for keyword fields that reference
+    array like objects."""
 
     BY_COLUMN_INDEX = 1
     BY_NAME = 2
+    NONE = 3
 
 
 # --- Field definitions -----------------------------------------------------------------------
 #
-# For each of the Radioss keywords, its structure and type of each field in the
-# keyword must be defined. This is done by specifying, for each keyword, a
+# For each of the Radioss keywords, its structure and the type of each field in
+# the keyword must be defined. This is done by specifying, for each keyword, a
 # sequence of field types.  Each field type contains information about the
 # underlying type (bool, float, int, str), where the field is located in the
 # keyword and how wide the field is/can be.
-#
-# The following basic field types are defined:
-#  1.) BoolField   : represents a single boolean
-#  2.) FloatField  : represents a single float field
-#  3.) IntField    : represents a single integer field
-#  4.) StringField : represents a single string field
-#
-# In addition, there is also an aggregate field type called `ArrayOfAtomicFields`.
-# The purpose of this type is to represent variable length arrays as found for
-# example in the /NODE keyword.
 
 
 @dataclass
@@ -109,10 +110,10 @@ class BoolField:
     positions: List[Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
 
     @property
-    def span(self):
+    def span(self) -> Literal[1]:
         return 1
 
-    def __call__(self, values):
+    def __call__(self, values) -> str:
         if len(values) != self.nflags:
             raise ValueError("Condition `len(values) != nflags` is violated.")
 
@@ -121,6 +122,9 @@ class BoolField:
             if value not in (0, 1):
                 raise ValueError("Boolean values must be either 0 or 1.")
 
+            # Flag indices follow the documentation, so they start at `1`, we
+            # need to compensate for this when assigning them to a position in
+            # a Python list.
             flags[position - 1] = f"{value}"
 
         return "".join(flags)
@@ -142,6 +146,7 @@ class FloatField:
             return ""
 
         srep = FLOAT_FULL_FORMAT_SPEC.format(value=value)
+
         if len(srep) > 20:
             raise ValueError(f"Float value `{value}` for `{self.attr}` is too large.")
         return srep
@@ -163,6 +168,7 @@ class IntField:
             return ""
 
         srep = INT_FULL_FORMAT_SPEC.format(value=value)
+
         if len(srep) > 9:
             raise ValueError(f"Integer value `{value}` for `{self.attr}` is too large.")
         return srep
@@ -185,6 +191,9 @@ class StringField:
 
 @dataclass
 class VLSequenceOfAtomicField:
+    """Represents a variable length of fields of a single atomic type. This
+    field is typically used for the definition of lists of
+    boxes/parts/nodes/elements (see /BOX/BOX for an example)."""
 
     field: IntField | FloatField
 
@@ -193,11 +202,12 @@ class VLSequenceOfAtomicField:
 class ArrayOfAtomicFields:
     """Represents the fields in keywords that are arrays (like /NODE).
 
-    When a field is defined inside a `ArrayOfAtomicFields` object, the `attr` argument must follow
-    a particular pattern in case of a multi-dimensional array. For example, the `xc` field
-    in the /NODE keyword is defined as `FloatField("xc_yc_zc:0")` where `xc_yc_zc` is the
-    Nx3 Numpy array holding the coordinates and `0` is the column index of this array
-    that corresponds to the `xc` coordinate.
+    When a field is defined inside a `ArrayOfAtomicFields` object, the `attr`
+    argument must follow a particular pattern in case of a multi-dimensional
+    array. For example, the `xc` field in the /NODE keyword is defined as
+    `FloatField("xc_yc_zc:0")` where `xc_yc_zc` is the Nx3 Numpy array holding
+    the coordinates and `0` is the column index of this array that corresponds
+    to the `xc` coordinate.
 
     """
 
@@ -207,53 +217,12 @@ class ArrayOfAtomicFields:
     def span(self) -> int:
         return sum([field.span for field in self.fields])
 
-    @property
-    def name_column_index_style_tuples(
-        self,
-    ) -> List[Tuple[str, None | int | str, None | IndexStyle]]:
-        name_index_tuples = []
-        for field in self.fields:
-            # The `attr` attribute in the initializer of a field is a string that must
-            # resolve to an attribute in the corresponding keyword definition. Except for
-            # an `ArrayOfAtomicFields` the `attr` must exactly match the attribute name in the
-            # corresponding keyword. For an `ArrayOfAtomicFields` `attr` can be encoded in a few
-            # ways:
-            #   - `attr` in this case the attribute directly references a the
-            #      attribute name of the corresponding keyword class
-            #   - `attr:<index>` in this case, `attr` is the name of the attribute in the
-            #      keyword instance and <index> is the column index
-            #   - `attr:<label>` in this case, `attr` is the name of the attribute in the
-            #      keyword class and <label> is the column name
-            parts = field.attr.split(":")
-
-            # The first part (part[0]) is always the name of the array like attribute in the
-            # keyword class.
-            attr = parts[0]
-            if len(parts) == 1:
-                # The array represents a single column (sequence) of values
-                column = None
-                index_style = None
-            elif len(parts) == 2:
-                # The array is multi-dimensional (multi-column) where the column we
-                # need to extract the data from is given either by column index or by name.
-                try:
-                    # If no exception is raised, it is a column index
-                    column = int(parts[1])
-                    index_style = IndexStyle.BY_COLUMN_INDEX
-                except ValueError:
-                    # If an exception is raised, it is a column name
-                    column = parts[1]
-                    index_style = IndexStyle.BY_NAME
-            else:
-                raise RuntimeError("Error encountered while parsing `{field.attr}`.")
-
-            name_index_tuples.append((attr, column, index_style))
-
-        return name_index_tuples
-
 
 @dataclass
 class MultiLineArrayOfAtomicFields:
+    """Represents the fields in a keyword that are array like, but where each entry
+    consists of more than one line (for example /BRIC20)."""
+
     fields: Sequence[ArrayOfAtomicFields]
 
 
@@ -305,21 +274,22 @@ class Keyword:
 
     def __post_init__(self) -> None:
         self._text_alignment = {
-            # Note: specifying an alignment for a `BoolField` has no effect because the
-            #       string representation of a `BoolField` is always exactly 10 characters
-            #       (so, as wide as the field). Add it here, because it allows us to process
-            #       the fields regardless of its specific type.
+            # Note: specifying an alignment for a `BoolField` has no effect
+            # because the string representation of a `BoolField` is always
+            # exactly 10 characters (so, as wide as the field). Add it here,
+            # because it allows us to process the fields regardless of its
+            # specific type.
             BoolField: TextAlignment.CENTER,
             FloatField: TextAlignment.CENTER,
             IntField: TextAlignment.CENTER,
             StringField: TextAlignment.LEFT,
         }
 
-        # Both starter and engine keywords can be treated in the same way if the
-        # keyword type equals `KeywordType.GENERIC`. If either a starter or an engine
-        # needs special treatment, use `KeywordType.STARTER` or `KeywordType.ENGINE`
-        # respectively.
-        self.type = KeywordType.GENERIC
+        # Both starter and engine keywords can be treated in the same way if
+        # the keyword category equals `KeywordCategory.GENERIC`. If either a
+        # starter or an engine keyword needs special treatment, use
+        # `KeywordCategory.STARTER` or `KeywordCategory.ENGINE` respectively.
+        self.category: KeywordCategory = KeywordCategory.GENERIC
 
     def check_pre_conditions(self) -> None:
         """Check pre-conditions for this keyword.
@@ -419,7 +389,7 @@ class Keyword:
             total_span = sum([getattr(field, "span", 1) for field in line_definition])
 
             if total_span > 10:
-                if self.type != KeywordType.ENGINE:
+                if self.category != KeywordCategory.ENGINE:
                     raise RuntimeError(
                         "Inconsistent value for `total_span` (must be <=10). (BUG)"
                     )
@@ -453,96 +423,118 @@ class Keyword:
                 _make_line(fields_srep, line_definition, field_values, shrink=shrink)
             )
 
-        def _handle_array_of_fields(lines, line_definition):
+        def _handle_array_of_atomic_fields(lines, line_definition):
             """Internal utility function that handles array of fields definitions."""
 
             # Initialize the fields that we need to fill
             nfields = NFIELDS - line_definition.span + len(line_definition.fields)
 
-            # Initialize string representation of fields (field values). Note that only the
-            # number of fields is important here. The size of each field is obtained from
-            # the `span` attribute of the field.
+            # Initialize string representation of fields (field values). Note
+            # that only the number of fields is important here. The size of
+            # each field is obtained from the `span` attribute of the field.
             fields_srep = nfields * [FIELDWIDTH * " "]
 
-            # Returns a tuple of (<array name>, <column index in array name>).
-            # There is one entry for each field.
-            name_column_index_style_tuples = (
-                line_definition.name_column_index_style_tuples
-            )
+            field_array_info = []
+            # Gather information on how the column of data associated with this
+            # attribute is obtained from the associated array like object.
+            for field in line_definition.fields:
+                # The name of the attribute referenced by this field.
+                attr = field.attr
 
-            # It is implicitly assumed that the check, that all arrays referenced by
-            # the fields have the same length, is done.
-            nrows = len(getattr(self, name_column_index_style_tuples[0][0]))
+                # If this attribute references a column in a multi-column array, a colon
+                # must be used to separate the label of the attribute from the index.
+                ncolons = attr.count(":")
+
+                if ncolons > 1:
+                    raise RuntimeError(
+                        "Attribute names can only contain a single `:` (BUG)."
+                    )
+
+                if ncolons == 0:
+                    if not hasattr(self, attr):
+                        raise RuntimeError(
+                            f"Inconsistency detected: `{attr}` does not exist."
+                        )
+
+                    array = getattr(self, attr)
+
+                    if hasattr(array, attr):
+                        field_array_info.append(
+                            ArrayInfo(attr, attr, IndexStyle.BY_NAME)
+                        )
+                    else:
+                        field_array_info.append(ArrayInfo(attr, None, IndexStyle.NONE))
+
+                    continue
+
+                attr, index = attr.split(":")
+
+                if not "|" in index:
+                    raise RuntimeError(
+                        "Indices must have the `<label>|<column_index>` format (BUG)."
+                    )
+
+                column_name, column_index = index.split("|")
+                column_index = int(column_index)
+
+                array = getattr(self, attr)
+
+                if hasattr(array, column_name):
+                    field_array_info.append(
+                        ArrayInfo(attr, column_name, IndexStyle.BY_NAME)
+                    )
+                else:
+                    field_array_info.append(
+                        ArrayInfo(attr, column_index, IndexStyle.BY_COLUMN_INDEX)
+                    )
+
+            nrows = len(getattr(self, field_array_info[0].attr))
 
             # Generate a line for each row in the arrays associated to this
             # `ArrayOfAtomicFields` instance.
             for row_index in range(nrows):
                 field_values = []
-                for name, column, index_style in name_column_index_style_tuples:
-                    array = getattr(self, name)
-                    if column is None:
-                        value = array[row_index]
-                    else:
-                        if index_style == IndexStyle.BY_COLUMN_INDEX:
-                            value = array[row_index][column]
-                        else:
-                            value = array[column][row_index]
+                for array_info in field_array_info:
+                    array = getattr(self, array_info.attr)
 
-                    field_values.append(value)
+                    if array_info.index_style == IndexStyle.NONE:
+                        field_values.append(array[row_index])
+                        continue
+
+                    if array_info.index_style == IndexStyle.BY_COLUMN_INDEX:
+                        field_values.append(array[row_index][array_info.column_index])
+                        continue
+
+                    if array_info.index_style == IndexStyle.BY_NAME:
+                        field_values.append(array[array_info.column_index][row_index])
+                        continue
+
+                    raise RuntimeError("Invalid index style (BUG).")
 
                 lines.append(
                     _make_line(fields_srep, line_definition.fields, field_values)
                 )
 
-        def _handle_multi_line_array_of_fields(lines, line_definition):
+        def _handle_multi_line_array_of_atomic_fields(lines, line_definition):
             """Internal utility function that handles multiple row array of
-            fields definitions."""
+            atomic fields definitions."""
 
-            # Create short-cut to keep line length within limits
-            a_field = line_definition.fields[0]
+            narray_of_fields = len(line_definition.fields)
 
-            # It is implicitly assumed that the check, that all arrays referenced by
-            # the fields have the same length, is done.
-            nrows = len(getattr(self, a_field.name_column_index_style_tuples[0][0]))
+            lines_per_array_of_fields = [[] for _ in range(narray_of_fields)]
 
-            for row_index in range(nrows):
-                for array_of_fields_obj in line_definition.fields:
+            for i, array_of_atomic_fields_obj in enumerate(line_definition.fields):
+                # Delegate the work
+                _handle_array_of_atomic_fields(
+                    lines_per_array_of_fields[i], array_of_atomic_fields_obj
+                )
 
-                    # Initialize the fields that we need to fill
-                    nfields = (
-                        NFIELDS
-                        - array_of_fields_obj.span
-                        + len(array_of_fields_obj.fields)
-                    )
-
-                    # Initialize string representation of fields (field
-                    # values). Note that only the number of fields is important
-                    # here. The size of each field is obtained from the `span`
-                    # attribute of the field.
-                    fields_srep = nfields * [FIELDWIDTH * " "]
-
-                    # Use the `getattr` syntax here to keep line-length within limits
-                    name_column_index_style_tuples = getattr(
-                        array_of_fields_obj, "name_column_index_style_tuples"
-                    )
-                    field_values = []
-                    for name, column, index_style in name_column_index_style_tuples:
-                        array = getattr(self, name)
-                        if column is None:
-                            value = array[row_index]
-                        else:
-                            if index_style == IndexStyle.BY_COLUMN_INDEX:
-                                value = array[row_index][column]
-                            else:
-                                value = array[column][row_index]
-
-                        field_values.append(value)
-
-                    lines.append(
-                        _make_line(
-                            fields_srep, array_of_fields_obj.fields, field_values
-                        )
-                    )
+            # Because of the way the work is delegated, the resulting lines are
+            # not in the correct order. That is why we separated out the
+            # collection of lines to separate lists. We now need to put them in
+            # the correct order and add them to the global `lines` list.
+            for line_group in zip(*lines_per_array_of_fields):
+                lines.extend(line_group)
 
         def _handle_vl_sequence_of_atomic_field(lines, line_definition):
             """Internal utility function that handles definitions of variable
@@ -626,10 +618,10 @@ class Keyword:
                     _handle_atomic(lines, line_definition)
 
                 case LineDefinitionType.ARRAY_OF_ATOMIC_FIELDS:
-                    _handle_array_of_fields(lines, line_definition)
+                    _handle_array_of_atomic_fields(lines, line_definition)
 
                 case LineDefinitionType.MULTI_LINE_ARRAY_OF_ATOMIC_FIELDS:
-                    _handle_multi_line_array_of_fields(lines, line_definition)
+                    _handle_multi_line_array_of_atomic_fields(lines, line_definition)
 
                 case LineDefinitionType.VL_SEQUENCE_OF_ATOMIC_FIELD:
                     _handle_vl_sequence_of_atomic_field(lines, line_definition)

@@ -5,6 +5,7 @@
 from pathlib import Path
 
 from .keywords import KEYWORD_REGISTRY
+from ._keywords.common import Keyword
 
 
 class Starter:
@@ -42,7 +43,7 @@ class Starter:
         self._active_keyword_cls = self._keyword_registry[key.lstrip("/").upper()]
         return self
 
-    def __call__(self, **kwargs) -> None:
+    def __call__(self, **kwargs) -> Keyword:
         """Instantiates the current active keyword class with the provided arguments."""
 
         if not self._active_keyword_cls:
@@ -58,7 +59,11 @@ class Starter:
 
             self._runname = kwargs["runname"]
 
-        self._keywords.append(cls(**kwargs))
+        instance = cls(**kwargs)
+
+        self._keywords.append(instance)
+
+        return instance
 
     def write(
         self, index=0, folder: str | Path | None = None, assume_yes=False

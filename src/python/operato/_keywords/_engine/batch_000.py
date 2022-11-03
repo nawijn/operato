@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..common import FloatField, IntField, Keyword, KeywordType, StringField
+from ..common import FloatField, IntField, Keyword, KeywordCategory, StringField
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
@@ -109,7 +109,7 @@ class AleGridDonea(Keyword):
         # We need to treat this keyword a little different because it has 6 float fields
         # on a single line. This is not allowed for starter keywords, but it is allowed
         # for engine keywords because the lines are free formatted.
-        self.type = KeywordType.ENGINE
+        self.type = KeywordCategory.ENGINE
 
         structure = [
             [

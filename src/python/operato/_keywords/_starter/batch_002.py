@@ -295,9 +295,9 @@ class Beam(Keyword):
             ArrayOfAtomicFields(
                 [
                     IntField("beam_ids", 1),
-                    IntField("node_ids:0", 2),
-                    IntField("node_ids:1", 3),
-                    IntField("node_ids:2", 4),
+                    IntField("node_ids:ID_1|0", 2),
+                    IntField("node_ids:ID_2|1", 3),
+                    IntField("node_ids:ID_3|2", 4),
                 ]
             )
         ]

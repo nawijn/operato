@@ -5,7 +5,15 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
-from ..common import ArrayOfAtomicFields, FloatField, IntField, Keyword
+from ..common import (
+    ArrayOfAtomicFields,
+    FloatField,
+    IndexStyle,
+    IntField,
+    Keyword,
+    KeywordPreconditionsType,
+    KeywordStructureType,
+)
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
@@ -161,36 +169,23 @@ class Nbcs(Keyword):
 # --- NODE ------------------------------------------------------------------------------------
 @dataclass
 class Node(Keyword):
-    unit_id: int
     node_ids: list | tuple | NDArray
     xc_yc_zc: NDArray
+    unit_id: int | None = None
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
 
     @property
     def keyword(self):
-        return f"/NODE/{self.unit_id}"
+        if self.unit_id:
+            return f"/NODE/{self.unit_id}"
+        else:
+            return "/NODE"
 
     @property
-    def pre_conditions(self):
-        node_ids = self.node_ids
-        xc_yc_zc = self.xc_yc_zc
-
-        if isinstance(node_ids, (tuple, list)):
-            node_ids = np.array(node_ids)
-
-        return [
-            (
-                len(node_ids) == len(xc_yc_zc),
-                "Pre-condition `len(node_ids) == len(xc_yc_zc)` failed",
-            ),
-            (
-                node_ids.shape == (len(node_ids),),
-                "Pre-conditions `node_ids.shape == len(node_ids,)` failed.",
-            ),
-            (
-                xc_yc_zc.shape == (len(xc_yc_zc), 3),
-                "Pre-conditions `xc_yc_zc.shape == len(xc_yc_zc, 3)` failed.",
-            ),
-        ]
+    def pre_conditions(self) -> KeywordPreconditionsType:
+        return []
 
     @property
     def structure(self):
@@ -198,9 +193,9 @@ class Node(Keyword):
             ArrayOfAtomicFields(
                 (
                     IntField("node_ids", 1),
-                    FloatField("xc_yc_zc:0", 2),
-                    FloatField("xc_yc_zc:1", 4),
-                    FloatField("xc_yc_zc:2", 6),
+                    FloatField("xc_yc_zc:xc|0", 2),
+                    FloatField("xc_yc_zc:yc|1", 4),
+                    FloatField("xc_yc_zc:xc|2", 6),
                 )
             )
         ]
