@@ -5,7 +5,9 @@ from dataclasses import dataclass
 from enum import Enum
 from io import TextIOBase
 from math import floor
-from typing import List, Literal, Sequence, Tuple, get_args, get_type_hints
+from typing import List, Iterable, Literal, Sequence, Tuple, get_args, get_type_hints
+
+import numpy as np
 
 from operato.constants import (
     FIELDWIDTH,
@@ -19,7 +21,7 @@ from operato.constants import (
 # objects
 ArrayInfo = namedtuple("ArrayInfo", ("attr", "column_index", "index_style"))
 
-
+# --- Small utility functions -----------------------------------------------------------------
 def get_literal_values(obj, attr):
     """Small utility to extract the values from a `Literal` type hint."""
     return get_args(get_type_hints(obj)[attr])
@@ -39,6 +41,63 @@ def check_if_all_values_are_present(
     else:
         srep = ", ".join(attrs_that_are_none)
         return (False, srep)
+
+
+def has_shape(array_like, shape):
+    """Small utility to whether or not the shape (number of rows/columns) of
+    the `array_like` object matches `shape`. Note that the `shape` parameter
+    must be fully defined. So if it has 3 rows and 1 column, the shape is (3,
+    1) and not (3,). The latter is what Numpy returns for a 1 dimensional
+    array."""
+
+    if not isinstance(array_like, np.ndarray):
+        array_like = np.array(array_like)
+
+    array_like_shape = array_like.shape
+    # Handle the 1D case where numpy indicates the shape as (nrows,).
+    if len(array_like_shape) == 1:
+        array_like_shape = (array_like_shape[0], 1)
+
+    return array_like_shape == shape
+
+
+def has_no_nones(iterable: Iterable):
+    """Small utility to check whether or not an iterable has None values."""
+    for element in iterable:
+        if element is None:
+            return False
+    return True
+
+
+def has_all_nones(iterable: Iterable):
+    """Small utility to check whether or not all elements in `iterable` are
+    None."""
+    for element in iterable:
+        if element is not None:
+            return False
+
+    return True
+
+
+def is_exclusive(*args) -> Literal[True, False]:
+    """Check if only 1 of the elements in the sequence has a value other than
+    None."""
+
+    if not args:
+        raise RuntimeError("Expecting a sequence with at least 1 element.")
+
+    if all([isinstance(arg, Iterable) for arg in args]):
+        flags = [not has_all_nones(arg) for arg in args]
+        return flags.count(True) == 1
+    else:
+        return args.count(None) == len(args) - 1
+
+
+def have_same_length(*args) -> Literal[True, False]:
+    """Very simple algoritm. Collect the lengths of all array like objects in
+    `seq`.  Add those lengths to a set (duplicates are not stored in a set) and
+    make sure there is only 1 element in the set."""
+    return len(set([len(element) for element in args])) == 1
 
 
 class KeywordCategory(Enum):

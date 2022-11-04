@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass
 
-import numpy as np
 from numpy.typing import NDArray
 
 from ..common import (
     ArrayOfAtomicFields,
     FloatField,
-    IndexStyle,
     IntField,
     Keyword,
     KeywordPreconditionsType,
@@ -41,7 +39,7 @@ class MonvolGas(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -65,7 +63,7 @@ class MonvolLfluid(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -89,7 +87,7 @@ class MonvolPres(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -113,7 +111,7 @@ class MoveFunct(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -137,7 +135,7 @@ class Mpc(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -161,7 +159,7 @@ class Nbcs(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -189,7 +187,7 @@ class Node(Keyword):
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             ArrayOfAtomicFields(
                 (
                     IntField("node_ids", 1),
@@ -222,7 +220,7 @@ class NonlocalMat(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -246,6 +244,6 @@ class Parameter(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
