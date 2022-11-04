@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from .batch_000 import (
+from ._starter.batch_000 import (
     Accel,
     Activ,
     Admas,
@@ -12,7 +12,7 @@ from .batch_000 import (
     ALEClose,
 )
 
-from .batch_001 import (
+from ._starter.batch_001 import (
     ALEGridDisp,
     ALEGridDonea,
     ALEGridLaplacian,
@@ -24,7 +24,7 @@ from .batch_001 import (
     ALEMat,
 )
 
-from .batch_002 import (
+from ._starter.batch_002 import (
     ALEMuscl,
     ALESolverFint,
     Ams,
@@ -36,7 +36,7 @@ from .batch_002 import (
     Beam,
 )
 
-from .batch_003 import (
+from ._starter.batch_003 import (
     Begin,
     BemDaa,
     BemFlow,
@@ -48,7 +48,7 @@ from .batch_003 import (
     Cload,
 )
 
-from .batch_004 import (
+from ._starter.batch_004 import (
     Cluster,
     Cnode,
     Convec,
@@ -60,7 +60,7 @@ from .batch_004 import (
     DefaultInterType2,
 )
 
-from .batch_005 import (
+from ._starter.batch_005 import (
     DefaultInterType7,
     DefaultInterType11,
     DefaultInterType19,
@@ -72,7 +72,7 @@ from .batch_005 import (
     DfsDetplan,
 )
 
-from .batch_006 import (
+from ._starter.batch_006 import (
     DfsDetplanNode,
     DfsDetpoint,
     DfsDetpointNode,
@@ -84,7 +84,7 @@ from .batch_006 import (
     EbcsInip,
 )
 
-from .batch_007 import (
+from ._starter.batch_007 import (
     EbcsIniv,
     EbcsInlet,
     EbcsMonvol,
@@ -96,7 +96,7 @@ from .batch_007 import (
     EbcsVel,
 )
 
-from .batch_008 import (
+from ._starter.batch_008 import (
     Eig,
     Encrypt,
     End,
@@ -108,7 +108,7 @@ from .batch_008 import (
     EosLszk,
 )
 
-from .batch_009 import (
+from ._starter.batch_009 import (
     EosMurnaghan,
     EosNasg,
     EosNobleAbel,
@@ -120,7 +120,7 @@ from .batch_009 import (
     EosTillotson,
 )
 
-from .batch_010 import (
+from ._starter.batch_010 import (
     Eref,
     EulerMat,
     Fail,
@@ -132,7 +132,7 @@ from .batch_010 import (
     FailEmc,
 )
 
-from .batch_011 import (
+from ._starter.batch_011 import (
     FailEnergy,
     FailFabric,
     FailFld,
@@ -144,7 +144,7 @@ from .batch_011 import (
     FailLadDama,
 )
 
-from .batch_012 import (
+from ._starter.batch_012 import (
     FailMullinsOr,
     FailNxt,
     FailOrthbiquad,
@@ -156,7 +156,7 @@ from .batch_012 import (
     FailSpalling,
 )
 
-from .batch_013 import (
+from ._starter.batch_013 import (
     FailTab1,
     FailTbutcher,
     FailTensstrain,
@@ -168,7 +168,7 @@ from .batch_013 import (
     FrameMov,
 )
 
-from .batch_014 import (
+from ._starter.batch_014 import (
     FrameMov2,
     FrameNod,
     FricOrient,
@@ -180,7 +180,7 @@ from .batch_014 import (
     Gauge,
 )
 
-from .batch_015 import (
+from ._starter.batch_015 import (
     GaugeSph,
     Gjoint,
     Grav,
@@ -192,7 +192,7 @@ from .batch_015 import (
     Grsh3n,
 )
 
-from .batch_016 import (
+from ._starter.batch_016 import (
     Grshel,
     Grspri,
     Grtria,
@@ -204,7 +204,7 @@ from .batch_016 import (
     Impflux,
 )
 
-from .batch_017 import (
+from ._starter.batch_017 import (
     Implicit,
     Imptemp,
     Impvel,
@@ -216,7 +216,7 @@ from .batch_017 import (
     Inicrack,
 )
 
-from .batch_018 import (
+from ._starter.batch_018 import (
     Inigrav,
     Inimap1d,
     Inimap1dFile,
@@ -228,7 +228,7 @@ from .batch_018 import (
     IniquaEpsp,
 )
 
-from .batch_019 import (
+from ._starter.batch_019 import (
     IniquaStress,
     InisheAux,
     Inish3Aux,
@@ -240,7 +240,7 @@ from .batch_019 import (
     InisheOrthLoc,
 )
 
-from .batch_020 import (
+from ._starter.batch_020 import (
     Inish3OrthLoc,
     InisheOrtho,
     Inish3Ortho,
@@ -252,7 +252,7 @@ from .batch_020 import (
     InisheStraFGlob,
 )
 
-from .batch_021 import (
+from ._starter.batch_021 import (
     Inish3StraFGlob,
     InisheStrsF,
     Inish3StrsF,
@@ -264,7 +264,7 @@ from .batch_021 import (
     Inista,
 )
 
-from .batch_022 import (
+from ._starter.batch_022 import (
     Initemp,
     InitrussFull,
     Inivel,
@@ -276,7 +276,7 @@ from .batch_022 import (
     InterLagdtType7,
 )
 
-from .batch_023 import (
+from ._starter.batch_023 import (
     InterLagmulType2,
     InterLagmulType7,
     InterLagmulType16,
@@ -288,7 +288,7 @@ from .batch_023 import (
     InterType5,
 )
 
-from .batch_024 import (
+from ._starter.batch_024 import (
     InterType6,
     InterType7,
     InterType8,
@@ -300,7 +300,7 @@ from .batch_024 import (
     InterType15,
 )
 
-from .batch_025 import (
+from ._starter.batch_025 import (
     InterType18,
     InterType19,
     InterType21,
@@ -312,7 +312,7 @@ from .batch_025 import (
     Key,
 )
 
-from .batch_026 import (
+from ._starter.batch_026 import (
     Lagmul,
     LeakMat,
     Line,
@@ -324,7 +324,7 @@ from .batch_026 import (
     MatGas,
 )
 
-from .batch_027 import (
+from ._starter.batch_027 import (
     MatLaw0,
     MatLaw1,
     MatPlasJohns,
@@ -336,7 +336,7 @@ from .batch_027 import (
     MatKEps,
 )
 
-from .batch_028 import (
+from ._starter.batch_028 import (
     MatLaw10,
     MatLaw11,
     MatLaw12,
@@ -348,7 +348,7 @@ from .batch_028 import (
     MatLaw20,
 )
 
-from .batch_029 import (
+from ._starter.batch_029 import (
     MatLaw21,
     MatLaw22,
     MatLaw23,
@@ -360,7 +360,7 @@ from .batch_029 import (
     MatLaw32,
 )
 
-from .batch_030 import (
+from ._starter.batch_030 import (
     MatLaw33,
     MatLaw34,
     MatLaw35,
@@ -372,7 +372,7 @@ from .batch_030 import (
     MatLaw42,
 )
 
-from .batch_031 import (
+from ._starter.batch_031 import (
     MatLaw43,
     MatLaw44,
     MatLaw46,
@@ -384,7 +384,7 @@ from .batch_031 import (
     MatLaw53,
 )
 
-from .batch_032 import (
+from ._starter.batch_032 import (
     MatLaw54,
     MatLaw57,
     MatLaw58,
@@ -396,7 +396,7 @@ from .batch_032 import (
     MatLaw65,
 )
 
-from .batch_033 import (
+from ._starter.batch_033 import (
     MatLaw66,
     MatLaw68,
     MatLaw69,
@@ -408,7 +408,7 @@ from .batch_033 import (
     MatLaw75,
 )
 
-from .batch_034 import (
+from ._starter.batch_034 import (
     MatLaw76,
     MatLaw77,
     MatLaw78,
@@ -420,7 +420,7 @@ from .batch_034 import (
     MatLaw84,
 )
 
-from .batch_035 import (
+from ._starter.batch_035 import (
     MatLaw87,
     MatLaw88,
     MatLaw90,
@@ -432,7 +432,7 @@ from .batch_035 import (
     MatLaw10,
 )
 
-from .batch_036 import (
+from ._starter.batch_036 import (
     MatLaw101,
     MatLaw102,
     MatLaw103,
@@ -444,7 +444,7 @@ from .batch_036 import (
     MatLaw111,
 )
 
-from .batch_037 import (
+from ._starter.batch_037 import (
     MatLaw112,
     MatLaw113,
     MatLaw114,
@@ -456,7 +456,7 @@ from .batch_037 import (
     MatLaw151,
 )
 
-from .batch_038 import (
+from ._starter.batch_038 import (
     MatLaw200,
     MatPlasPredef,
     MatUserij,
@@ -468,7 +468,7 @@ from .batch_038 import (
     MonvolFvmbag2,
 )
 
-from .batch_039 import (
+from ._starter.batch_039 import (
     MonvolGas,
     MonvolLfluid,
     MonvolPres,
@@ -480,7 +480,7 @@ from .batch_039 import (
     Parameter,
 )
 
-from .batch_040 import (
+from ._starter.batch_040 import (
     Part,
     Penta6,
     Perturb,
@@ -492,7 +492,7 @@ from .batch_040 import (
     Preload,
 )
 
-from .batch_041 import (
+from ._starter.batch_041 import (
     PropInject1,
     PropInject2,
     PropPcompp,
@@ -504,7 +504,7 @@ from .batch_041 import (
     PropType6,
 )
 
-from .batch_042 import (
+from ._starter.batch_042 import (
     PropType8,
     PropType9,
     PropType10,
@@ -516,7 +516,7 @@ from .batch_042 import (
     PropType15,
 )
 
-from .batch_043 import (
+from ._starter.batch_043 import (
     PropType16,
     PropType17,
     PropType18,
@@ -528,7 +528,7 @@ from .batch_043 import (
     PropType25,
 )
 
-from .batch_044 import (
+from ._starter.batch_044 import (
     PropType26,
     PropType27,
     PropType28,
@@ -540,7 +540,7 @@ from .batch_044 import (
     PropType34,
 )
 
-from .batch_045 import (
+from ._starter.batch_045 import (
     PropType35,
     PropType36,
     PropType43,
@@ -552,7 +552,7 @@ from .batch_045 import (
     Radiation,
 )
 
-from .batch_046 import (
+from ._starter.batch_046 import (
     Random,
     Rbe2,
     Rbe3,
@@ -564,7 +564,7 @@ from .batch_046 import (
     Rwall,
 )
 
-from .batch_047 import (
+from ._starter.batch_047 import (
     RwallLagmul,
     RwallTherm,
     Sect,
@@ -576,7 +576,7 @@ from .batch_047 import (
     SensorDist,
 )
 
-from .batch_048 import (
+from ._starter.batch_048 import (
     SensorDistSurf,
     SensorEnergy,
     SensorGauge,
@@ -588,7 +588,7 @@ from .batch_048 import (
     SensorSect,
 )
 
-from .batch_049 import (
+from ._starter.batch_049 import (
     SensorSens,
     SensorTime,
     SensorVel,
@@ -600,7 +600,7 @@ from .batch_049 import (
     SkewFix,
 )
 
-from .batch_050 import (
+from ._starter.batch_050 import (
     SkewMov,
     SkewMov2,
     SlipringShell,
@@ -612,7 +612,7 @@ from .batch_050 import (
     Sphglo,
 )
 
-from .batch_051 import (
+from ._starter.batch_051 import (
     Spring,
     Stack,
     Stamping,
@@ -624,7 +624,7 @@ from .batch_051 import (
     SurfDsurf,
 )
 
-from .batch_052 import (
+from ._starter.batch_052 import (
     SurfEllips,
     SurfGrbricExt,
     SurfGrbricFree,
@@ -636,7 +636,7 @@ from .batch_052 import (
     SurfProp,
 )
 
-from .batch_053 import (
+from ._starter.batch_053 import (
     SurfSeg,
     SurfSubmodel,
     SurfSubset,
@@ -648,7 +648,7 @@ from .batch_053 import (
     Th,
 )
 
-from .batch_054 import (
+from ._starter.batch_054 import (
     ThAccel,
     ThBeam,
     ThBric,
@@ -660,7 +660,7 @@ from .batch_054 import (
     ThInter,
 )
 
-from .batch_055 import (
+from ._starter.batch_055 import (
     ThMode,
     ThMonvol,
     ThNode,
@@ -672,7 +672,7 @@ from .batch_055 import (
     ThRwall,
 )
 
-from .batch_056 import (
+from ._starter.batch_056 import (
     ThSectio,
     ThSh3n,
     ThShel,
@@ -684,7 +684,7 @@ from .batch_056 import (
     ThSurf,
 )
 
-from .batch_057 import (
+from ._starter.batch_057 import (
     ThTria,
     ThTruss,
     ThermStressMat,
@@ -696,7 +696,7 @@ from .batch_057 import (
     ThpartGrshel,
 )
 
-from .batch_058 import (
+from ._starter.batch_058 import (
     ThpartGrspri,
     ThpartGrtrus,
     Title,
@@ -707,9 +707,17 @@ from .batch_058 import (
     TransformSym,
 )
 
-from .batch_059 import TransformTra, Tria, Truss, Unit, Upwind, ViscProny, Xelem, Xref
+from ._starter.batch_059 import (
+    TransformTra,
+    Tria,
+    Truss,
+    Unit,
+    Upwind,
+    ViscProny,
+    Xelem,
+    Xref,
+)
 
-# --- Build the keyword registry --------------------------------------------------------------
 keywords = (
     Accel,
     Activ,
@@ -1249,6 +1257,3 @@ keywords = (
     Xelem,
     Xref,
 )
-KEYWORD_REGISTRY = {}
-for keyword in keywords:
-    KEYWORD_REGISTRY[keyword.__name__.upper()] = keyword

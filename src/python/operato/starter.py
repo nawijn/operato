@@ -2,10 +2,12 @@
 """Provides a low-level interface for generating OpenRadioss starter files.
 
 """
+from datetime import datetime
 from pathlib import Path
+from operato.constants import LINE_SEPARATOR
 
-from .keywords import KEYWORD_REGISTRY
-from ._keywords.common import Keyword
+from operato.keywords.common import Keyword
+from operato.keywords.starter import Begin, End
 
 
 class Starter:
@@ -13,57 +15,33 @@ class Starter:
     very natural syntax for selecting keyword templates and providing them with
     the parameters they need for instantation:
 
-    >>> starter[<keyword>](<kwargs>)
-
-    For example:
-    >>> starter["BEGIN"](runname="Crash test")
-
-
     """
 
-    def __init__(self):
+    def __init__(self, add_header=True, add_separator=False):
         """Initializes a new starter instance."""
 
-        # The keyword registry containing all OpenRadioss starter keywords.
-        # The key is the name of the keyword in uppercase ("ADMESH/GLOBAL")
-        # without the leading "/".
-        self._keyword_registry = KEYWORD_REGISTRY["starter"]
+        self.add_header = add_header
+        self.add_separator = add_separator
         self._keywords = []
-        self._active_keyword_cls = None
-        self._runname = None
+        self._runname = ""
 
     @property
-    def runname(self):
+    def runname(self) -> str:
         return self._runname
 
-    def __getitem__(self, key):
-        """Mimics attribute access to a keyword, but always returns `self`. It
-        does set the active keyword class, so when calling `self`, it
-        instantiates the correct class."""
-        self._active_keyword_cls = self._keyword_registry[key.lstrip("/").upper()]
-        return self
-
-    def __call__(self, **kwargs) -> Keyword:
-        """Instantiates the current active keyword class with the provided arguments."""
-
-        if not self._active_keyword_cls:
-            raise RuntimeError(
-                "Call operator must be called with `_active_keyword_cls` set."
+    def add(self, keyword: Keyword) -> None:
+        if not isinstance(keyword, Keyword):
+            raise ValueError(
+                "Argument `keyword` must be an instance of a subclass of `Keyword`"
             )
 
-        cls = self._active_keyword_cls
+        if len(self._keywords) == 0:
+            if not isinstance(keyword, Begin):
+                raise RuntimeError("The first keyword to add must be `/BEGIN`.")
+            else:
+                self._runname = keyword.runname
 
-        if not self._runname:
-            if not cls == self._keyword_registry["BEGIN"]:
-                raise RuntimeError("The first keyword must be `BEGIN`")
-
-            self._runname = kwargs["runname"]
-
-        instance = cls(**kwargs)
-
-        self._keywords.append(instance)
-
-        return instance
+        self._keywords.append(keyword)
 
     def write(
         self, index=0, folder: str | Path | None = None, assume_yes=False
@@ -78,7 +56,7 @@ class Starter:
 
         if filepath.is_file() and not assume_yes:
             overwrite_file = input(
-                f"File `{filepath}` already exists. Overwrite? [yes/no (default=no)] "
+                f"File `{filepath.name}` already exists. Overwrite? [yes/no (default=no)] "
             )
 
             if not overwrite_file.lower() in ("y", "yes"):
@@ -86,7 +64,17 @@ class Starter:
 
         # Serialize the keywords
         with open(filepath, "w") as fd:
+            if self.add_header:
+                now = datetime.now().isoformat()
+                fd.write("#\n")
+                fd.write(f"# File created at {now}\n")
+                fd.write("#\n")
+
             for keyword in self._keywords:
+                if self.add_separator:
+                    fd.write(LINE_SEPARATOR)
+                    fd.write("\n")
+
                 keyword.write(fd)
 
 

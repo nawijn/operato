@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-from operato.keywords import KEYWORD_REGISTRY
+from operato.keywords.starter import keywords
 
 from operato.testutil import TestManager as _TestManager
 
@@ -9,8 +9,6 @@ TEST_MANAGER = _TestManager(Path("./definitions"))
 
 
 def check_missing():
-    keywords = KEYWORD_REGISTRY["starter"].values()
-
     nkeywords = len(keywords)
     missing_keyword_definition_files = 0
 

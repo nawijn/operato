@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._engine.batch_006 import (
+from operato.keywords.engine import (
     Atfile,
     Atsymbolfile,
     AtsymbolfileKeyword2,
@@ -34,7 +34,6 @@ def test_batch_006(interactive=False):
 
     missing_keyword_definition_files = 0
 
-
     for keyword in keywords:
         TEST_MANAGER.set_keyword_class(keyword)
         try:
@@ -54,6 +53,7 @@ def test_batch_006(interactive=False):
         print(
             f"{missing_keyword_definition_files} keyword definition files were missing."
         )
-        
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     test_batch_006(interactive=True)

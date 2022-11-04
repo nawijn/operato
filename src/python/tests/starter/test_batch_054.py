@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_054 import (
+from operato.keywords.starter import (
     ThAccel,
     ThBeam,
     ThBric,

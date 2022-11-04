@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
-from typing import Literal, List
+from typing import Literal, List, Sequence
 from numpy.typing import NDArray
 
 from ..common import (
@@ -169,7 +169,7 @@ class Bcs(Keyword):
 
     bcs_id: int
     bcs_title: str
-    trarot: str
+    trarot: Sequence[Literal[0, 1]]
     skew_id: int
     grnd_id: int
 

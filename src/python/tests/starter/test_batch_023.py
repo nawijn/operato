@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_023 import (
+from operato.keywords.starter import (
     InterLagmulType2,
     InterLagmulType7,
     InterLagmulType16,

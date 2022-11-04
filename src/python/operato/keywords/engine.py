@@ -1,4 +1,4 @@
-from .batch_000 import (
+from ._engine.batch_000 import (
     Abf,
     Adyrel,
     AleGridDisp,
@@ -9,7 +9,7 @@ from .batch_000 import (
     AleLinkOff,
     AleLinkOn,
 )
-from .batch_001 import (
+from ._engine.batch_001 import (
     AleLinkVel,
     AleMusclOff,
     AleOff,
@@ -20,7 +20,7 @@ from .batch_001 import (
     AnimBrickRestype,
     AnimBrickTdel,
 )
-from .batch_002 import (
+from ._engine.batch_002 import (
     AnimBrickTens,
     AnimBrickTensDama,
     AnimBrickVdami,
@@ -31,7 +31,7 @@ from .batch_002 import (
     AnimGpsStrainTens,
     AnimGpsStressTens,
 )
-from .batch_003 import (
+from ._engine.batch_003 import (
     AnimGps1,
     AnimGps2,
     AnimGzip,
@@ -42,7 +42,7 @@ from .batch_003 import (
     AnimSensor,
     AnimShellDama,
 )
-from .batch_004 import (
+from ._engine.batch_004 import (
     AnimShellEpsp,
     AnimShellFldf,
     AnimShellFldz,
@@ -53,7 +53,7 @@ from .batch_004 import (
     AnimShellIdplyRestype,
     AnimShellNxtfactor,
 )
-from .batch_005 import (
+from ._engine.batch_005 import (
     AnimShellPhi,
     AnimShellRestype,
     AnimShellSig1h,
@@ -64,7 +64,7 @@ from .batch_005 import (
     AnimVect,
     AnimVers,
 )
-from .batch_006 import (
+from ._engine.batch_006 import (
     Atfile,
     Atsymbolfile,
     AtsymbolfileKeyword2,
@@ -75,7 +75,7 @@ from .batch_006 import (
     BcsrAle,
     BcsrLag,
 )
-from .batch_007 import (
+from ._engine.batch_007 import (
     BcsrRot,
     BcsrTra,
     Damp,
@@ -86,7 +86,7 @@ from .batch_007 import (
     Dt,
     DtAirbagKeyword3,
 )
-from .batch_008 import (
+from ._engine.batch_008 import (
     DtAle,
     DtAms,
     DtCstAms,
@@ -97,7 +97,7 @@ from .batch_008 import (
     DtShnodKeyword3,
     DtSphcelKeyword3,
 )
-from .batch_009 import (
+from ._engine.batch_009 import (
     DtTherm,
     Dt1BrickKeyword3Iflag,
     Dt1Shell,
@@ -108,7 +108,7 @@ from .batch_009 import (
     DynainDt,
     DynainShellStrainFull,
 )
-from .batch_010 import (
+from ._engine.batch_010 import (
     DynainShellStressFull,
     Dyrel,
     Dyrel1,
@@ -119,7 +119,7 @@ from .batch_010 import (
     H3dBeam,
     H3dCompress,
 )
-from .batch_011 import (
+from ._engine.batch_011 import (
     H3dDt,
     H3dLsensor,
     H3dNoda,
@@ -130,7 +130,7 @@ from .batch_011 import (
     H3dRbodySinglePart,
     H3dShell,
 )
-from .batch_012 import (
+from ._engine.batch_012 import (
     H3dSolid,
     H3dSph,
     H3dSpring,
@@ -141,7 +141,7 @@ from .batch_012 import (
     ImplBuckl2,
     ImplCheck,
 )
-from .batch_013 import (
+from ._engine.batch_013 import (
     ImplDivergN,
     ImplDt1,
     ImplDt2,
@@ -152,7 +152,7 @@ from .batch_013 import (
     ImplDyna1,
     ImplDyna2,
 )
-from .batch_014 import (
+from ._engine.batch_014 import (
     ImplDynaDamp,
     ImplGstifOff,
     ImplInterKcomp,
@@ -163,7 +163,7 @@ from .batch_014 import (
     ImplLrigrot,
     ImplLsearchOff,
 )
-from .batch_015 import (
+from ._engine.batch_015 import (
     ImplLsearchN,
     ImplMonvolOff,
     ImplNcycleStop,
@@ -174,7 +174,7 @@ from .batch_015 import (
     ImplPrintLinear,
     ImplPrintNonlin,
 )
-from .batch_016 import (
+from ._engine.batch_016 import (
     ImplPstifOff,
     ImplQstat,
     ImplQstatDtscal,
@@ -185,7 +185,7 @@ from .batch_016 import (
     ImplSbcsMsglv,
     ImplSbcsOrder,
 )
-from .batch_017 import (
+from ._engine.batch_017 import (
     ImplSbcsOutcore,
     ImplShpoff,
     ImplShpon,
@@ -196,7 +196,7 @@ from .batch_017 import (
     InivAxis,
     InivAxisKeyword31,
 )
-from .batch_018 import (
+from ._engine.batch_018 import (
     InivAxisKeyword32,
     InivRot,
     InivRotKeyword31,
@@ -207,7 +207,7 @@ from .batch_018 import (
     Inter,
     Kerel,
 )
-from .batch_019 import (
+from ._engine.batch_019 import (
     Kerel1,
     Kill,
     Madymo,
@@ -218,7 +218,7 @@ from .batch_019 import (
     OutputLsensor,
     Parith,
 )
-from .batch_020 import (
+from ._engine.batch_020 import (
     Print,
     Rad2radOn,
     Rbody,
@@ -229,7 +229,7 @@ from .batch_020 import (
     Run,
     Shsub,
 )
-from .batch_021 import (
+from ._engine.batch_021 import (
     StateBeamAux,
     StateBeamFull,
     StateBrickAuxFull,
@@ -240,7 +240,7 @@ from .batch_021 import (
     StateBrickStrainGlobfull,
     StateBrickStresFull,
 )
-from .batch_022 import (
+from ._engine.batch_022 import (
     StateBrickStresGlobfull,
     StateDt,
     StateInimap1dKeyword3,
@@ -251,7 +251,7 @@ from .batch_022 import (
     StateNodeVel,
     StateNoDel,
 )
-from .batch_023 import (
+from ._engine.batch_023 import (
     StateShellAuxFull,
     StateShellEpspFull,
     StateShellFail,
@@ -262,7 +262,7 @@ from .batch_023 import (
     StateShellStressGlobfull,
     StateShellThick,
 )
-from .batch_024 import (
+from ._engine.batch_024 import (
     StateSpringFull,
     StateStrFile,
     StateTrussFull,
@@ -273,7 +273,7 @@ from .batch_024 import (
     Thermal,
     Title,
 )
-from .batch_025 import (
+from ._engine.batch_025 import (
     VelRot,
     VelTra,
     Vers,
@@ -510,6 +510,3 @@ keywords = (
     VelTra,
     Vers,
 )
-KEYWORD_REGISTRY = {}
-for keyword in keywords:
-    KEYWORD_REGISTRY[keyword.__name__.upper()] = keyword

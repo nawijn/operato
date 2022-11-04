@@ -3,7 +3,14 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from ..common import FloatField, IntField, Keyword, StringField
+from ..common import (
+    FloatField,
+    IntField,
+    Keyword,
+    KeywordStructureType,
+    StringField,
+    get_literal_values,
+)
 
 # === Concrete keyword definitions (in alphabetical order) ====================================
 #
@@ -31,7 +38,7 @@ class MatLaw0(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -55,7 +62,7 @@ class MatLaw1(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -63,37 +70,72 @@ class MatLaw1(Keyword):
 # --- MATPLASJOHNS ----------------------------------------------------------------------------
 @dataclass
 class MatPlasJohns(Keyword):
+    """This law represents an isotropic elasto-plastic material using the
+    Johnson-Cook material model.  This model expresses material stress as a
+    function of strain, strain rate and temperature. A built-in failure
+    criterion based on the maximum plastic strain is available.
+
+    """
+
+    mat_id: int
     mat_title: str
     rho_i: float
     E: float
     nu: float
-    iflag: Literal[0, 1]
-    mat_id: int = 1
-    unit_id: int = 1
+    i_flag: Literal[0, 1] = 0
+    # iflag = 0
+    a: float | None = None
+    b: float | None = None
+    n: float = 1.0
     eps_max_p: float = 1e30
     sigma_max_0: float = 1e30
-    # iflag = 0
-    a: float = float("nan")
-    b: float = float("nan")
-    n: float = 1.0
     # iflag = 1
-    sigma_y: float = float("nan")
-    UTS: float = float("nan")
-    eps_uts: float = float("nan")
+    sigma_y: float | None = None
+    UTS: float | None = None
+    eps_uts: float | None = None
+    # Other
+    c: float = 0.0
+    eps_rate_0: float | None = None
+    icc: Literal[0, 1, 2] = 1
+    f_smooth: Literal[0, 1] = 1
+    f_cut: float = 1e30
+    c_hard: float = 0.0
+    m: float = 1.0
+    T_melt: float = 1e30
+    rho_c_p: float | None = None
+    T_r: float = 298
+    unit_id: int | None = None
 
     @property
     def keyword(self):
-        return f"/MAT/PLAS_JOHNS/{self.mat_id}/{self.unit_id}"
+        if self.unit_id:
+            return f"/MAT/PLAS_JOHNS/{self.mat_id}/{self.unit_id}"
+        else:
+            return f"/MAT/PLAS_JOHNS/{self.mat_id}"
+
+    @property
+    def pre_conditions(self):
+        conditions = []
+
+        for attr in ("i_flag", "icc", "f_smooth"):
+            conditions.append(
+                (
+                    getattr(self, attr) in get_literal_values(self, attr),
+                    f"Invalid value for `{attr}`. See documentation for details.",
+                )
+            )
+
+        return []
 
     @property
     def structure(self):
-        structure = [
+        structure: KeywordStructureType = [
             StringField("mat_title", 1, 10),
             FloatField("rho_i", 1),
-            [FloatField("E", 1), FloatField("nu", 3), IntField("iflag", 5)],
+            [FloatField("E", 1), FloatField("nu", 3), IntField("i_flag", 5)],
         ]
 
-        if self.iflag == 0:
+        if self.i_flag == 0:
             structure.extend(
                 [
                     [
@@ -105,8 +147,7 @@ class MatPlasJohns(Keyword):
                     ]
                 ]
             )
-        elif self.iflag == 1:
-            # TODO: Another line must be added. See documentation.
+        elif self.i_flag == 1:
             structure.extend(
                 [
                     [
@@ -118,10 +159,25 @@ class MatPlasJohns(Keyword):
                     ]
                 ]
             )
-        else:
-            raise RuntimeError(
-                f"Value of `iflag` must be either 0 or 1 not {self.iflag}"
-            )
+
+        structure.extend(
+            [
+                [
+                    FloatField("c", 1),
+                    FloatField("eps_rate_0", 3),
+                    IntField("icc", 5),
+                    IntField("f_smooth", 6),
+                    FloatField("f_cut", 7),
+                    FloatField("c_hard", 9),
+                ],
+                [
+                    FloatField("m", 1),
+                    FloatField("T_melt", 3),
+                    FloatField("rho_c_p", 5),
+                    FloatField("T_r", 7),
+                ],
+            ]
+        )
 
         return structure
 
@@ -145,7 +201,7 @@ class MatPlasZeril(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -169,7 +225,7 @@ class MatLaw3(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -193,7 +249,7 @@ class MatLaw4(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -217,7 +273,7 @@ class MatLaw5(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -241,7 +297,7 @@ class MatLaw6(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure
 
@@ -265,6 +321,6 @@ class MatKEps(Keyword):
 
     @property
     def structure(self):
-        structure = []
+        structure: KeywordStructureType = []
 
         return structure

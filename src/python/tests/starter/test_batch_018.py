@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_018 import (
+from operato.keywords.starter import (
     Inigrav,
     Inimap1d,
     Inimap1dFile,

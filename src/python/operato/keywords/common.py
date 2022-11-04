@@ -339,9 +339,9 @@ class Keyword:
             # because it allows us to process the fields regardless of its
             # specific type.
             BoolField: TextAlignment.CENTER,
-            FloatField: TextAlignment.CENTER,
-            IntField: TextAlignment.CENTER,
-            StringField: TextAlignment.LEFT,
+            FloatField: TextAlignment.RIGHT,
+            IntField: TextAlignment.RIGHT,
+            StringField: TextAlignment.CENTER,
         }
 
         # Both starter and engine keywords can be treated in the same way if
