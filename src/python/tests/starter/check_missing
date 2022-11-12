@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+from operato.keywords.starter import keywords
+
+from operato.testutil import TestManager as _TestManager
+
+TEST_MANAGER = _TestManager(Path("./definitions"))
+
+
+def check_missing():
+    nkeywords = len(keywords)
+    missing_keyword_definition_files = 0
+
+    for keyword in keywords:
+        TEST_MANAGER.set_keyword_class(keyword)
+        try:
+            TEST_MANAGER.load_keyword_definition()
+        except FileNotFoundError:
+            missing_keyword_definition_files += 1
+            continue
+
+        TEST_MANAGER.reset()
+
+    if missing_keyword_definition_files > 0:
+        print(
+            f"{missing_keyword_definition_files}/{nkeywords} keyword definition files were missing."
+        )
+
+
+if __name__ == "__main__":
+    check_missing()

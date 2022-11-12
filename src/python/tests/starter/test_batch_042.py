@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_042 import (
+from operato.keywords.starter import (
     PropType8,
     PropType9,
     PropType10,

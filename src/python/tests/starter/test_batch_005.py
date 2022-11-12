@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_005 import (
+from operato.keywords.starter import (
     DefaultInterType7,
     DefaultInterType11,
     DefaultInterType19,

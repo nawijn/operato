@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_003 import (
+from operato.keywords.starter import (
     Begin,
     BemDaa,
     BemFlow,
-    Box,
     BoxBox,
     Brick,
     Bric20,
@@ -24,7 +23,6 @@ def test_batch_003(interactive=False):
         Begin,
         BemDaa,
         BemFlow,
-        Box,
         BoxBox,
         Brick,
         Bric20,

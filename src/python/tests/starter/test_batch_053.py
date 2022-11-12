@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_053 import (
+from operato.keywords.starter import (
     SurfSeg,
     SurfSubmodel,
     SurfSubset,

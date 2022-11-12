@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from operato._keywords._starter.batch_058 import (
+from operato.keywords.starter import (
     ThpartGrspri,
     ThpartGrtrus,
     Title,
-    Transform,
     TransformMatrix,
     TransformPosition,
     TransformRot,
@@ -24,7 +23,6 @@ def test_batch_058(interactive=False):
         ThpartGrspri,
         ThpartGrtrus,
         Title,
-        Transform,
         TransformMatrix,
         TransformPosition,
         TransformRot,

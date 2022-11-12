@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Type
 import json
 from colorama import Fore, Style
-from operato._keywords.common import Keyword, TextAlignment
+from operato.keywords.common import Keyword, TextAlignment
 import toml
 
 
